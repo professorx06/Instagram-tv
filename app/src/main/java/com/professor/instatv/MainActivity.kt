@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.KeyEvent
 import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -17,9 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         webView = findViewById(R.id.webView)
-
         webView.settings.apply {
             javaScriptEnabled = true
             domStorageEnabled = true
@@ -28,12 +27,19 @@ class MainActivity : AppCompatActivity() {
             setSupportZoom(false)
             mediaPlaybackRequiresUserGesture = false
             cacheMode = WebSettings.LOAD_DEFAULT
-            userAgentString = "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Mobile Safari/537.36"
+            userAgentString = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
         }
-
-        webView.webViewClient = WebViewClient()
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                val url = request?.url.toString()
+                if (url.startsWith("intent://") || url.startsWith("market://")) {
+                    return true
+                }
+                return false
+            }
+        }
         webView.webChromeClient = WebChromeClient()
-        webView.loadUrl("https://www.instagram.com")
+        webView.loadUrl("https://www.instagram.com/accounts/login/")
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
