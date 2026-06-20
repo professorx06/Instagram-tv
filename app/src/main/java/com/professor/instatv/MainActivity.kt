@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         webView.webChromeClient = WebChromeClient()
-        webView.loadUrl("https://www.instagram.com/accounts/login/")
+        webView.loadUrl("https://www.instagram.com/")
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
